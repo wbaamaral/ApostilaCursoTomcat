@@ -1,0 +1,111 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                                  %
+%                           Configuração de Pacotes                                %
+%                                                                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[brazilian]{babel} % pacote para a internacionalização de documentos, neste caso configurado para o português do Brasil;
+\usepackage[utf8]{inputenc} % permite a entrada de caracteres especiais (como acentos) diretamente no código fonte;
+\usepackage[T1]{fontenc} % define a codificação de caracteres a ser usada na saída;
+\usepackage{fontspec} % permite o uso de fontes instaladas no sistema;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                                  %
+%                           Configuração de Fontes                                 %
+%                                                                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\setmainfont{Times New Roman} % é usado para definir a fonte principal do documento quando se está usando o pacote fontspec. 
+
+% Defina uma fonte secundária para títulos
+\newfontfamily\ubuntu{Ubuntu}
+\newfontfamily\tty{Herr Von Muellerhoff}
+\newfontfamily\firacoderetina{Fira Code Retina}
+
+\usepackage{titling} % O pacote "titling" fornece comandos para personalização de títulos em documentos, como \maketitle, \title, \author, \date, entre outros. Ele permite que os usuários ajustem a posição, o espaçamento e o estilo de cada elemento do título.
+
+\usepackage{fancyhdr} % permite a customização dos cabeçalhos e rodapés das páginas;
+
+\usepackage{nameref} % permite referenciar nomes de seções, figuras, tabelas, etc. pelo seu nome ao invés do número;
+
+\usepackage{tocloft} % fornece recursos para personalizar o formato de listas de tabelas, figuras e outras listas no LaTeX. 
+
+\usepackage{geometry} %pacote para configuração das margens e tamanho do papel do documento;
+\geometry{a4paper,left=2cm,right=1cm,top=2cm,bottom=2cm} % Configuração de margens
+
+\usepackage{xcolor} % permite o uso de cores no documento.
+\usepackage{graphicx} % pacote para a inclusão de imagens em formatos diversos;
+\usepackage{wrapfig} % utilizado para criar ambiente de flutuação do logotipo
+
+\usepackage{indentfirst} %O pacote indentfirst garante que o primeiro parágrafo de cada seção também tenha recuo, e não apenas os parágrafos seguintes. O comprimento \parindent define o tamanho do  recuo e pode ser ajustado para o valor desejado.
+\setlength{\parindent}{1.5cm}
+
+\usepackage{listings} % pacote para exibição de código fonte com formatação personalizada;
+\renewcommand{\lstlistingname}{Arquivo}
+\renewcommand{\lstlistlistingname}{Lista de Arquivos e Configurações}
+\newlistof{lstlistoflistings}{lol}{\lstlistlistingname}
+\lstset{
+	language=sh,
+	basicstyle=\small\ttfamily,
+	numbers=left,
+	numberstyle=\tiny\color{black},
+	frame=single,
+	rulecolor=\color{gray!20},
+	backgroundcolor=\color{gray!5},
+	keywordstyle=\color{blue},
+	stringstyle=\color{purple},
+	commentstyle=\color{olive},
+	morekeywords={mkdir,cd,ls,echo,apt},
+	}
+
+\usepackage{identkey} % O pacote identkey define um ambiente para criar uma lista de itens com identificadores alfanuméricos personalizados. É útil para criar referências cruzadas e outros tipos de documentos que precisam de identificadores personalizados para itens.
+
+\usepackage{lipsum} % para gerar texto aleatório
+\usepackage{enumitem} % para configurar o recuo
+
+\usepackage[colorlinks=true, linkcolor=darkgray]{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=darkgray,
+	filecolor=magenta,      
+	urlcolor=black,
+	pdftitle={Treinamento - Administração Apache Tomcat},
+	pdfpagemode=FullScreen,
+}
+
+\usepackage{float} % O pacote float fornece melhor controle sobre os ambientes flutuantes (como figuras, tabelas e outros objetos) no LaTeX, permitindo que você personalize a posição deles na página. Ele oferece opções adicionais para especificar onde o objeto flutuante deve ser colocado, como "here" (aqui), "top" (topo), "bottom" (fundo) e "page" (página). Além disso, ele permite definir a posição padrão para um determinado tipo de objeto flutuante em todo o documento.
+
+\cftsetindents{section}{1.5cm}{0.5cm} % Define o recuo do título de seção e da numeração em relação às margens esquerda e direita do índice.
+\cftsetpnumwidth{1cm} % Define a largura da coluna da numeração no índice.
+\usepackage{tabularx} % Permite a criação de tabelas com colunas de largura automática.
+\newcolumntype{C}{>{\centering\arraybackslash}p{4cm}}  % Define um novo tipo de coluna "C" com largura fixa de 4cm e alinhamento centralizado.
+\newcolumntype{D}{>{\raggedleft\arraybackslash}p{2cm}} % Define um novo tipo de coluna "D" com largura fixa de 2cm e alinhamento à direita.
+
+
+\title{\ubuntu Administração Apache Tomcat 9.0} % Define o título do documento.
+\author{\emph{Autor}: Murilo Bavaro Bilia} % Define o autor do documento.
+\date{Fevereiro de 2023} %Define a data do documento. Se deixado em branco, a data atual será utilizada.
+
+%alinhamento de sumário.
+\usepackage{titletoc}
+
+\titlecontents{chapter}
+[0pt]
+{\addvspace{1em}}
+{\bfseries\chaptername\ \thecontentslabel\quad}
+{}
+{\hfill\contentspage}
+
+\titlecontents{section}
+[1.5em]
+{\addvspace{0.5em}}
+{\contentslabel{1.5em}\hspace{0.5em}}
+{\hspace{0.5em}}
+{\titlerule*[0.5pc]{.}\contentspage}
+
+\titlecontents{subsection}
+[3em]
+{\addvspace{0.25em}}
+{\contentslabel{2.25em}\hspace{0.75em}}
+{\hspace{0.75em}}
+{\titlerule*[0.5pc]{.}\contentspage}

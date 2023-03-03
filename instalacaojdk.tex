@@ -1,0 +1,44 @@
+\section{Instalação do Java Development Kit}
+
+Instalação automática via sistema operacional:
+
+
+\begin{lstlisting}[breaklines=true,basicstyle=\firacoderetina,
+breaklines=true,caption=\firacoderetina Instalando pacotes openjdk,
+postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+showstringspaces=false]
+
+vm01:/home/#		
+vm01:/home/# 		
+vm01:/home/# apt update && apt install openjdk-17-jdk -y 
+vm01:/home/#
+
+\end{lstlisting}	
+
+Instalação do Oracle JDK via alternatives:
+
+\begin{list}{•}{}
+	\setlength{\leftskip}{1.5cm}
+	\setlength{\rightskip}{0pt plus 1.0cm}
+	\setlength{\parindent}{-1.5cm}
+\item Fazer o Download do JDK no site da Oracle
+\item Extrair o conteúdo do arquivo baixado no diretório /usr/lib/jvm
+\item Executar o comando abaixo para fazer a configuração via alternatives:
+\item update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk<versão>/bin/java 1
+\item update-alternatives --set java /usr/lib/jvm/jdk<versão>/bin/java
+\item update-alternatives --config java
+\end{list}
+
+Instalação do Oracle JDK manualmente:
+
+\begin{list}{•}{}
+	\setlength{\leftskip}{1.5cm} 
+	\setlength{\rightskip}{0pt plus 1.0cm}
+	\setlength{\parindent}{-1.5cm}
+\item Fazer o Download do JDK no site da Oracle
+\item Extrair o conteúdo do arquivo baixado no diretório /usr/lib/jvm
+\item Criar um link simbólico do binário do Java em /etc/alternatives:\newline
+	{\small \texttt{ln -s /usr/lib/jvm/jdk<versão>/bin/java /etc/alternatives/java}}
+\item Criar um link simbólico do alternatives para o diretório /usr/bin:\newline
+	{\small \texttt{ln -s /etc/alternatives/java /usr/bin/java}}
+\end{list}

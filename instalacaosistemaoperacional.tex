@@ -1,0 +1,69 @@
+\section{Instalação do Sistema Operacional}
+
+Todo o ambiente de treinamento será montado dentro do hypervisor VirtualBox.
+O laboratório será composto por 4 Virtual Machines executando o sistema operacional Debian\footnote{\href{https://www.debian.org/CD/http-ftp/}{Baixando as imagens do CD/DVD Debian via HTTP/FTP}} 11.
+
+Cada Virtual Machine terá a seguinte função:
+\begin{table}[h]
+	\caption{Definição do laboratório: Nomes, Funções e Endereços}
+	\centering
+	\begin{tabularx}{0.69\textwidth}{D|X|C}
+		\firacoderetina\textbf{VM1} 	& \ubuntu Tomcat1      				& \ubuntu 192.168.5.191 \\ \hline
+		\firacoderetina\textbf{VM2}    & \ubuntu Tomcat2      				& \ubuntu 192.168.5.192 \\ \hline
+		\firacoderetina\textbf{FRONT}  & \ubuntu Servidor Web 				& \ubuntu 192.168.5.193 \\ \hline
+		\firacoderetina\textbf{DB}  	& \ubuntu Servidor Banco de dados 	& \ubuntu 192.168.5.194 \\ \hline
+	\end{tabularx}
+\end{table}
+
+As configurações minímas de cada VM serão as seguintes:
+
+\begin{list}{•}{}
+	\setlength{\leftskip}{1.8cm} 
+	\setlength{\rightskip}{0pt plus 1.0cm}
+	\setlength{\parindent}{-1.8cm}
+\item \textbf{VM1} - 1GB RAM, 1 CPU, 8 GB HD
+\item \textbf{VM2} - 1GB RAM, 1 CPU, 8 GB HD
+\item \textbf{FRONT} - 512MB RAM, 1 CPU, 8 GB HD
+\item \textbf{DB} - 512MB RAM, 1 CPU, 8 GB HD
+\end{list}
+
+O particionamento do disco ficará da seguinte forma:
+\begin{table}[H]
+	\caption{Sugestão de particionamento}
+	\centering
+	\begin{tabularx}{0.4\textwidth}{||C|X||}
+		\hline
+		\textbf{/}     & 3072 MB \\ \hline
+		\textbf{/boot} & 1024 MB \\ \hline
+		\textbf{/var}  & 1024 MB \\ \hline
+		\textbf{/srv}  & 2048 MB \\ \hline
+		\textbf{/tmp}  & 1024 MB \\ \hline
+		\textbf{Swap}  &  512 MB \\ \hline
+	\end{tabularx}
+\end{table}	
+
+Após a instalação do Sistema Operacional, será necessário instalar os pacotes de software abaixo que irão nos auxiliar durante o treinamento:
+
+\begin{lstlisting}[breaklines=true,basicstyle=\firacoderetina,breaklines=true,
+caption=\firacoderetina Instalando pacotes extras, postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+showstringspaces=false]
+
+# Instalando pacotes extras
+apt update && apt install -y net-tools  vim sysstat iotop bind9utils zip unzip tcpdump figlet htop linuxlogo
+
+\end{lstlisting}
+
+
+Em seguida, vamos adicionar um usuário para executar o Tomcat:
+
+\begin{lstlisting}[breaklines=true,basicstyle=\firacoderetina,
+breaklines=true,caption=\firacoderetina Criando usuário e grupo,
+postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+showstringspaces=false]
+
+vm01:/home/# 		
+vm01:/home/# groupadd tomcat		
+vm01:/home/# useradd -s /bin/false -g tomcat -d /srv/tomcat tomcat
+vm01:/home/# 		
+
+\end{lstlisting}

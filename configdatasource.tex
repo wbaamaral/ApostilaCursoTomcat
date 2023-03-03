@@ -1,0 +1,98 @@
+\section{Configurando um datasource}
+
+Em nosso laboratório, vamos montar um banco de dados Mariadb\footnote{MariaDB é um sistema de gerenciamento de banco de dados relacional de código aberto que foi desenvolvido como um fork do MySQL em 2009 por Michael Widenius, o criador original do MySQL. Ele foi criado como uma alternativa de software livre ao MySQL, que foi adquirido pela Oracle Corporation em 2008. O nome "Maria" é uma homenagem ao nome da filha de Widenius. Desde então, o MariaDB evoluiu para se tornar um banco de dados confiável, escalável e de alta performance usado em uma ampla gama de aplicativos.\\Sobre a MariaDB Foundation. (s.d.). Recuperado em 02 de março de 2023, de \url{https://mariadb.org/about/}} que iremos utilizar em nossa configuração de datasource. Execute os comandos abaixo na VM DB:
+
+\hypertarget{instalandoMariDB}{}
+\begin{lstlisting}[language=sql,breaklines=true,basicstyle=\ttfamily, 
+label=cinstalandoMariDB0 ,
+breaklines=true,caption=\firacoderetina Instalando Mariadb, 
+postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+showstringspaces=false]
+banco:~# apt-get install -y mysql-client mysql-server
+banco:~#
+\end{lstlisting}
+
+Em seguida vamos criar um banco de dados de teste, dar permissão para um usuário e criar uma tabela de teste:
+
+\hypertarget{criandobancodados}{}
+\begin{lstlisting}[language=sql,breaklines=true,basicstyle=\ttfamily, 
+label=criandobancodados0 ,
+breaklines=true,caption=\firacoderetina Criar banco e tabelas, 
+postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+showstringspaces=false]
+banco:~# mysql -u root
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 34
+Server version: 10.5.18-MariaDB-0+deb11u1 Debian 11
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> create database javatest;
+Query OK, 1 row affected (0,000 sec)
+
+MariaDB [(none)]>grant all on javatest.* to javauser@192.168.5.191 identified by 'javadude';
+Query OK, 0 rows affected (0,009 sec)
+
+MariaDB [(none)]> flush privileges;
+Query OK, 0 rows affected (0,000 sec)
+
+MariaDB [(none)]> 
+
+MariaDB [(none)]> use javatest;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+MariaDB [javatest]>
+
+MariaDB [(none)]> use javatest;
+
+MariaDB [javatest]> show tables;
++--------------------+
+| Tables_in_javatest |
++--------------------+
+|                    |
++--------------------+
+1 row in set (0,000 sec)
+
+MariaDB [javatest]> create table testdata (id int not null auto_increment primary key,foo varchar(25),bar int);
+Query OK, 0 rows affected (0,021 sec)
+
+MariaDB [javatest]> insert into testdata values(null, 'hello', 12345);
+Query OK, 1 row affected (0,018 sec)
+
+MariaDB [javatest]> \q
+Bye
+banco:~#
+\end{lstlisting}
+
+
+Após concluir a configuração do banco de dados, é hora de instalar o client do MySQL no Tomcat. Uma outra configuração é o endereço de escuta que precisa ser alterado de 127.0.0.1 para 0.0.0.0, dentro do arquivo /etc/mysql/mariadb.conf.d/\nameref{fig:server.cnf} conforme mostrado na figura \ref{fig:server.cnf}, após a configuração reinicie\footnote{systemctl restart mariadb.service} o serviço do banco.
+
+\begin{figure}[H]
+	\centering
+	\caption[50-server.cnf]{Arquivo de configuração do servidor mariadb}
+	\includegraphics[width=\linewidth]{img/tela008}
+	\label{fig:server.cnf}
+\end{figure}
+
+Façam o download do jdbc driver do MySQL no site oficial do projeto, e extraiam o conteúdo dele. Após isso, copie o arquivo {\small \texttt{mysql-connector-java-<versão>-bin.jar}} para o diretório de libs do Tomcat em {\small \texttt{\$CATALINA\_HOME/lib/}}
+
+Feito isso, podemos configurar o datasource no arquivo {\small \texttt{\$CATALINA\_HOME/conf/context.xml}}.
+Adicione a esse arquivo as configurações abaixo:
+
+\begin{figure}[H]
+	\centering
+	\caption[context.xml]{Configurando datasource}
+	\includegraphics[width=\linewidth]{img/tela009}
+	\label{fig:context.xml}
+\end{figure}
+Reinicie o Tomcat após a configuração do datasource e faça o deploy do pacote \textbf{DBTest.war} em seguida.
+\begin{figure}[H]
+	\centering
+	\caption[DBTest - Browser]{Resultado consulta DBTest}
+	\includegraphics[width=\linewidth]{img/tela010}
+	\label{fig:DBTesteWAR}
+\end{figure}

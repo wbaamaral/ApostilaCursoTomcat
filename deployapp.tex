@@ -1,0 +1,272 @@
+\section{Instalação do Tomcat}
+
+Primeiramente é necessário efetuar o download do Tomcat\footnote{ \href{https://tomcat.apache.org/tomcat-9.0-doc/index.html} {Documentação oficial}} no site oficial do projeto \url{https://tomcat.apache.org/}. Para esse treinamento, iremos realizar o download do pacote .tar.gz. 
+
+Após efetuar o download, extraia o conteúdo do arquivo para o diretório /srv:
+
+\begin{lstlisting}[breaklines=true,basicstyle=\firacoderetina,
+breaklines=true,caption=\firacoderetina Download e extração do tomcat,
+postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+showstringspaces=false]
+vm01:/home/#	
+vm01:/home/# mkdir /home/download \&\& cd /home/download
+vm01:/home/download/# mkdir /srv/tomcat1
+vm01:/home/download/# wget -c  https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.72/bin/apache-tomcat-9.0.72.tar.gz
+vm01:/home/download/# tar xzvf apache-tomcat-9.0.72.tar.gz -C /srv/tomcat1 --strip-components=1
+vm01:/home/download/# 
+\end{lstlisting}
+
+A estrutura padrão de diretórios do Tomcat é a seguinte:
+
+\begin{lstlisting}[language=sh]
+
+vm01:/home/downloads# ls -ltra /srv/tomcat1/
+total 156
+drwxr-x--- 2 root root  4096 fev 18 05:25 work
+drwxr-x--- 7 root root  4096 fev 18 05:25 webapps
+-rw-r----- 1 root root 16505 fev 18 05:25 RUNNING.txt
+-rw-r----- 1 root root  6901 fev 18 05:25 RELEASE-NOTES
+-rw-r----- 1 root root  3398 fev 18 05:25 README.md
+-rw-r----- 1 root root  2333 fev 18 05:25 NOTICE
+drwxr-x--- 2 root root  4096 fev 18 05:25 logs
+-rw-r----- 1 root root 57092 fev 18 05:25 LICENSE
+-rw-r----- 1 root root  6210 fev 18 05:25 CONTRIBUTING.md
+drwx------ 2 root root  4096 fev 18 05:25 conf
+-rw-r----- 1 root root 19992 fev 18 05:25 BUILDING.txt
+drwxr-xr-x 5 root root  4096 fev 25 23:34 ..
+drwxr-xr-x 9 root root  4096 fev 25 23:34 .
+drwxr-x--- 2 root root  4096 fev 25 23:34 temp
+drwxr-x--- 2 root root  4096 fev 25 23:34 lib
+drwxr-x--- 2 root root  4096 fev 25 23:34 bin
+
+vm01:/home/downloads# 
+
+\end{lstlisting}
+
+Sendo cada diretório:
+
+\begin{list}{•}{}
+	\setlength{\leftskip}{1.5cm}
+	\setlength{\rightskip}{0pt plus 1.0cm}
+	\setlength{\parindent}{-1.5cm}
+\item \textbf{bin} - Binários e scripts necessários para execução do e manutenção do Tomcat.
+\item \textbf{conf} - Arquivos de configuração do servidor, contexto e usuários do Tomcat.
+\item \textbf{lib} - Bibliotecas nativas de uso da JVM. Nesse diretório também podem ser colocadas bibliotecas utilizadas por aplicações desenvolvidas para o Tomcat.
+\item \textbf{logs} - Diretório de logs padrão do servidor.
+\item \textbf{temp} - Diretório de arquivos temporário da JVM.
+\item \textbf{webapps} - Repositório dos projetos Java que serão executados e publicados na WEB.
+\item \textbf{work} - Diretório utilizado para carregar as classes e objetos dos projetos Java.
+\end{list}
+
+Após extrair o conteúdo do arquivo, devemos mudar o owner (dono) dos arquivos para o usuário tomcat criado anteriormente, Em seguida, vamos logar com o usuário tomcat e inicializar a instância.
+
+\begin{lstlisting}[breaklines=true,basicstyle=\firacoderetina,
+breaklines=true,caption=\firacoderetina Ajuste de permissões,
+postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+showstringspaces=false]
+vm01:/home/downloads# chown -R tomcat. /srv/tomcat1
+vm01:/home/downloads#  cd /srv/tomcat1/
+vm01:/srv/tomcat1#   
+vm01:/srv/tomcat1# chmod -R g+r conf/
+vm01:/srv/tomcat1# chmod g+x conf/
+vm01:/srv/tomcat1# chown -R tomcat webapps/ work/ temp/ logs/
+vm01:/srv/tomcat1# 
+vm01:/srv/tomcat1# su - tomcat
+vm01:/srv/tomcat1$ ./bin/startup.sh
+
+\end{lstlisting}
+
+Caso esteja tudo OK, você deverá acessar a home do Tomcat através da url:
+
+\begin{center}
+	\texttt{{\small \emph{\textbf{http://<endereço ip do servidor>:8080}}}}
+\end{center} 
+
+\begin{figure}[H]
+	\centering
+	\caption[Tela inicial]{Tela inicial do servidor}
+	\includegraphics[width=\linewidth]{img/tela001}
+	\label{fig:tomcat-telainicial}
+\end{figure}
+
+
+Note algumas variáveis importante:
+
+\texttt{\textbf{CATALINA\_HOME}} = diretório em que foi extraído o conteúdo do servidor Tomcat.
+
+\texttt{\textbf{JAVA\_HOME}} = diretório do JDK que está em utilização.
+
+\subsection{Configuração de usuário}
+
+O Tomcat vem com todos os usuários desabilitados por padrão (ver arquivo\\ \$CATALINA\_HOME/conf/tomcat-users.xml):
+
+\begin{figure}[H]
+	\centering
+	\caption[tomcat-users.xml]{Exemplo de usuário admin com senha admin em texto plano}
+	\includegraphics[width=\linewidth]{img/tela005}
+	\label{fig:tomcat-users-texto-plano}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\caption[tomcat-users.xml]{Exemplo de usuário admin com senha admin em sha-512}
+	\includegraphics[width=\linewidth]{img/tomcat-users}
+	\label{fig:tomcat-users}
+\end{figure}
+
+
+Para adicionar um usuário de administrador, será necessário criar a role “\textbf{manager-gui}” e adicionar um usuário e senha nesse arquivo, ficando da forma mostrada em \nameref{fig:tomcat-users}.
+
+O manager-gui é uma aplicação web do Tomcat que permite gerenciar a instância do Tomcat de forma remota. Ele fornece uma interface gráfica para gerenciamento de aplicativos da web implantados, bem como para gerenciamento de usuários e funções. O manager-gui é uma ferramenta útil para administradores de servidor que desejam gerenciar o Tomcat remotamente.
+
+No entanto, o manager-gui também pode ser uma potencial vulnerabilidade de segurança, pois permite o gerenciamento remoto do servidor Tomcat. Portanto, é importante configurar adequadamente a segurança do manager-gui para evitar ataques maliciosos.
+
+As configurações de segurança mínimas recomendadas para o uso seguro do manager-gui incluem:
+
+\begin{enumerate}
+	\item Definir uma senha forte para o usuário padrão admin.
+	\item 	Limitar o acesso ao manager-gui a um endereço IP específico ou a uma rede específica.
+	\item 	Desativar o acesso anônimo e limitar o número de tentativas de login.
+	\item 	Habilitar o SSL/TLS para criptografar a comunicação entre o navegador e o servidor.
+	\item 	Restringir as permissões de acesso do usuário do manager-gui apenas para as ações necessárias.
+	\item 	Manter o manager-gui atualizado com as últimas atualizações de segurança.
+\end{enumerate}
+
+E em seguida, reinicie o tomcat:
+
+\begin{lstlisting}[breaklines=true,basicstyle=\ttfamily, 
+label=restartTomcat,
+breaklines=true,caption=\firacoderetina Iniciar e Parar tomcat manualmente,
+postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+showstringspaces=false]
+vm01:/srv/tomcat1/$ # parar o servidor	
+vm01:/srv/tomcat1/$ /srv/tomcat1/bin/shutdown.sh
+vm01:/srv/tomcat1/$ # iniciar o servidor
+vm01:/srv/tomcat1/$ /srv/tomcat1/bin/startup.sh
+vm01:/srv/tomcat1/$ 
+\end{lstlisting}
+
+Após reiniciar, tente acessar a aba “\textbf{Server Status}” na home do Tomcat e observe a tela abaixo negando o acesso:
+
+\begin{figure}[H]
+	\centering
+	\caption[Negacao de acesso]{Negação de acesso externo}
+	\includegraphics[width=\linewidth]{img/tela002}
+	\label{fig:tomcat-erro-acesso}
+\end{figure}
+
+Isso ocorre, pois o Tomcat 9 só permite o acesso ao painel de gerenciamento à partir de um browser executado na mesma máquina local que o servidor. Para liberar o acesso a administração remotamente, vamos editar o arquivo /srv/tomcat1/webapps/manager/META-INF/\nameref{contextxml} e comentar a linha conforme o arquivo mostrado no arquivo \ref{contextxml} página \pageref{contextxml}. Para esse treinamento como é um ambiente controlado e fora da internet, vamos comentar essa configuração, porém, quando for colocar em produção e altamente recomendado manter isso ativo e caso precise de acesso externo ao painel, faça uma regra similar liberando sua origem para ter acesso.
+
+\lstinputlisting[language=xml, caption=\firacoderetina{context.xml}, basicstyle=\footnotesize\firacoderetina,  
+label=contextxml, showspaces=false, showtabs=false, showstringspaces='']{xml/context.xml}
+
+
+Abram o arquivo \texttt{\$CATALINA\_HOME/conf/tomcat-users.xml} e percebam que a senha do usuário está em texto plano e visível, conforme mostrado na figura \nameref{fig:tomcat-users-texto-plano} na página \pageref{fig:tomcat-users-texto-plano}, para qualquer um que tenha o acesso de leitura ao arquivo XML. O Tomcat disponibiliza o script \texttt{\$CATALINA\_HOME/bin/digest.sh} que gera um hash de uma senha que poderá ser configurada para o usuário. Para utilizar essa função precisaremos habilitar o suporte a senhas encriptadas no UserDatabase no arquivo \texttt{\$CATALINA\_HOME/conf/\nameref{realm512}}, observe que deverá estar como mostrado na figura \ref{fig:tomcat-realm-nativo} página \pageref{fig:tomcat-realm-nativo} e devemos alterar para ficar igual arquivo \ref{realm512} mostrado na página \pageref{realm512}.
+
+\begin{figure}[H]
+	\centering
+	\caption[server.xml]{Server xml nativo}
+	\includegraphics[width=\linewidth]{img/tela006}
+	\label{fig:tomcat-realm-nativo}
+\end{figure}
+
+
+\begin{lstlisting}[language=xml, caption=\firacoderetina{server.xml}, basicstyle=\scriptsize\firacoderetina, 
+label=realm512, showspaces=false, showtabs=false, showstringspaces='', firstnumber=139]	
+
+<Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase">
+
+<CredentialHandler className="org.apache.catalina.realm.MessageDigestCredentialHandler"
+algorithm="sha-512" />
+
+</Realm>
+
+\end{lstlisting}
+
+Para gerar uma senha no padrão de sha-512, pode utilizar o script que é disponibilizado junto ao servidor, conforme mostrado no arquivo \ref{gerarSenha}.	
+
+\begin{lstlisting}[breaklines=true,basicstyle=\ttfamily, 
+label=gerarSenha ,
+breaklines=true,caption=\firacoderetina gerando senha,
+postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+showstringspaces=false]
+vm01:~# cd /srv/tomcat1/
+vm01:/srv/tomcat1# ./bin/digest.sh -a sha-512 -h org.apache.catalina.realm.MessageDigestCredentialHandler admin
+
+admin:c84a5de03584383c46e0d0294e0d56c8f3a181d9a0d868c5468c50c5053039d8[...] 
+
+vm01:/srv/tomcat1#
+
+\end{lstlisting}
+
+Reinicie\footnote{\nameref{restartTomcat} veja na página \pageref{restartTomcat}} o serviço do Tomcat e teste o acesso com a nova senha.
+
+\subsection{Deploy de aplicação}
+
+Imagina só, você acabou de desenvolver um aplicativo em Java que está simplesmente incrível! Agora vem a parte emocionante, você precisa colocá-lo em produção e deixá-lo acessível para todos os usuários, e para isso vamos usar o Apache Tomcat, um servidor web super confiável e eficiente.
+
+Ele utiliza “\emph{pacotes}” que contém o conteúdo da aplicação JAVA compilado para distribuí-los em seguida via WEB. Existem basicamente 3 tipos de pacotes:
+
+\textbf{WAR} - Web Archive - Contém arquivos Servlet class, Gifs, HTML para ser distribuídos via WEB. É o tipo mais comum de pacotes para servidores JAVA no geral.
+
+\textbf{JAR} - Contém conteúdo do Enterprise Java Beans (\textbf{EJB}). Pouco utilizado no Tomcat.
+
+\textbf{EAR} - Enterprise Archive - Um pacote que pode agrupar os dois tipos de aplicação (\textbf{WAR} e \textbf{JAR})
+
+\newpage
+O Tomcat aceita deploy de aplicações de diferentes formas que serão mostradas a seguir: 
+
+
+\subsubsection{Via Tomcat Manager:}
+
+Acesse o Tomcat Manager pelo web browser:
+
+\begin{figure}[H]
+	\centering
+	\caption[Tela Application Mangager]{Visão inicial tomcat web application manager}
+	\includegraphics[width=\linewidth]{img/tela003}
+	\label{fig:tomcat-tela-appmanager}
+\end{figure}
+
+Role a janela até a sessão “War file to deploy” e escolha o arquivo war para deploy, em seguida, click em deploy:
+
+\begin{figure}[H]
+	\centering
+	\caption[Tela Application Mangager - Deploy]{Visão inicial tomcat web application manager - área de deploy}
+	\includegraphics[width=\linewidth]{img/tela004}
+	\label{fig:tomcat-tela-deploy}
+\end{figure}
+
+\newpage
+Em seguida, testem o acesso a aplicação através do browser:
+\begin{figure}[H]
+	\centering
+	\caption[sample.war]{Visão da aplicação online}
+	\includegraphics[width=\linewidth]{img/tela007}
+	\label{fig:showapp}
+\end{figure}
+\subsubsection{Deploy manual}
+
+Se você é do tipo que prefere lidar com as coisas via terminal, temos uma opção para você. É possível fazer o deploy do seu aplicativo usando SSH para acessar o servidor. Vamos supor que o seu arquivo esteja no seu terminal e que você já tenha configurado o SSH. O seu endereço IP é 192.168.5.235 e o seu usuário é "master". Além disso, o arquivo "sample.war" está em uma pasta "desenvolvimento" dentro do seu home. Para realizar o deploy via terminal, basta abrir o terminal no seu computador e digitar os seguintes comandos:
+
+\hypertarget{figura-smaple.war}{}
+\begin{lstlisting}[breaklines=true,basicstyle=\ttfamily, 
+label=acessosshVm0100 ,
+breaklines=true,caption=\firacoderetina Acessar o servidor via ssh e efetuar o deploy via terminal,
+postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+showstringspaces=false]
+terminal@master:~$ ssh tomcat@192.168.5.191
+vm01:~$ cd /srv/tomcat1/webapps
+vm01:/srv/tomcat1/webapps/$
+vm01:/srv/tomcat1/webapps/$ scp master@192.168.5.235:/home/master/desenvolvimento/sample.war tomcat@192.168.5.191:/srv/tomcat1/webapps
+\end{lstlisting}
+
+Com tudo configurado, é hora de verificar se o seu aplicativo está funcionando corretamente. Basta acessar a página do servidor pelo navegador, digitando o endereço: 
+\begin{center}
+	\hyperlink{figura-smaple.war}{{\texttt{\textbf{http://192.168.5.191:8080/sample}}}}
+\end{center}
+Se tudo estiver correto, você deverá conseguir visualizar o seu aplicativo e navegar por ele sem problemas.
+
+Não é incrível ver o resultado do seu trabalho funcionando na prática? O Apache Tomcat é realmente uma ferramenta poderosa para facilitar todo o processo de deploy e tornar o seu aplicativo acessível a todos.
+
+Não se esqueça de testar novamente o acesso pelo browser e certificar-se de que a aplicação "\nameref{fig:showapp}" está online, como mostrado na Figura \ref{fig:showapp}.

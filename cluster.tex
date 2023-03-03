@@ -1,0 +1,58 @@
+\section{Cluster}
+
+Nesse capítulo, iremos montar um cluster para garantir a alta disponibilidade das aplicações que estão em execução no Tomcat. Além da configuração de alta disponibilidade nos servidores do Tomcat, as aplicações também tem que estar preparadas para replicar as sessões geradas quando uma falha ocorrer; essas aplicações tem que possuir a tag <distributable/> dentro do arquivo de especificação web.xml.
+
+\subsection{Cluster no mesmo servidor}
+
+É possível executar diversas instâncias de Tomcat no mesmo servidor e montar um cluster com apenas uma máquina. Apesar de não ter uma redundância física em caso de falha no sistema operacional hospedeiro, essa estrutura pode ser útil quando se trabalha com recursos limitados.
+
+Extraia os arquivos do Tomcat em /srv/tomcat2 na VM1:
+
+\begin{lstlisting}[breaklines=true,basicstyle=\firacoderetina,
+breaklines=true,caption=\firacoderetina Instalando segunda instância tomcat,
+postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+showstringspaces=false]
+vm01:/home/downloads# ls
+apache-tomcat-10.1.6.tar.gz  jdk-17_linux-x64_bin.tar.gz
+apache-tomcat-9.0.72.tar.gz  mysql-connector-java-8.0.12.jar
+
+vm01:/home/downloads# tar xzf apache-tomcat-9.0.72.tar.gz  -C /srv/tomcat2 --strip-components=1 
+vm01:/home/downloads# ls /srv/tomcat2
+bin            conf             lib      logs    
+README.md      RUNNING.txt      webapps
+BUILDING.txt   CONTRIBUTING.md  LICENSE  NOTICE  
+RELEASE-NOTES  temp             work
+vm01:/home/downloads# chown -R tomcat. /srv/tomcat2 
+vm01:/home/downloads# cd /srv/tomcat2
+vm01:/srv/tomcat2# chmod -R g+r conf/
+vm01:/srv/tomcat2# chmod g+x conf/
+vm01:/srv/tomcat2# chown -R tomcat webapps/ work/ temp/ logs/ 
+vm01:/srv/tomcat2# ls -l
+total 148
+drwxr-x--- 2 tomcat tomcat  4096 mar  2 15:33 bin
+-rw-r----- 1 tomcat tomcat 19992 fev 18 05:25 BUILDING.txt
+drwxr-x--- 2 tomcat tomcat  4096 fev 18 05:25 conf
+-rw-r----- 1 tomcat tomcat  6210 fev 18 05:25 CONTRIBUTING.md
+drwxr-x--- 2 tomcat tomcat  4096 mar  2 15:33 lib
+-rw-r----- 1 tomcat tomcat 57092 fev 18 05:25 LICENSE
+drwxr-x--- 2 tomcat tomcat  4096 fev 18 05:25 logs
+-rw-r----- 1 tomcat tomcat  2333 fev 18 05:25 NOTICE
+-rw-r----- 1 tomcat tomcat  3398 fev 18 05:25 README.md
+-rw-r----- 1 tomcat tomcat  6901 fev 18 05:25 RELEASE-NOTES
+-rw-r----- 1 tomcat tomcat 16505 fev 18 05:25 RUNNING.txt
+drwxr-x--- 2 tomcat tomcat  4096 mar  2 15:33 temp
+drwxr-x--- 7 tomcat tomcat  4096 fev 18 05:25 webapps
+drwxr-x--- 2 tomcat tomcat  4096 fev 18 05:25 work
+vm01:/srv/tomcat2# 
+
+\end{lstlisting}
+
+Em seguida, altere os parâmetros de portas dentro do arquivo de server.xml, adicionando 100 a esses valores:
+
+\lstinputlisting[language=xml, caption=\firacoderetina{server.xml}, basicstyle=\scriptsize \firacoderetina,  
+label=serverxml, showspaces=false, showtabs=false, showstringspaces='']{xml/server.xml}
+
+
+\lstinputlisting[language=xml, caption=\firacoderetina{adicionar esse conteúdo no server.xml}, basicstyle=\tiny \firacoderetina,  
+label=cluster-xml, showspaces=false, showtabs=false, showstringspaces='']{xml/config-cluster.xml}
+
