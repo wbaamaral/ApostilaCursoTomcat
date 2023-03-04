@@ -1,6 +1,6 @@
 # Estudo do curso Servidores com Tomcat
 
-<p align="justify">Esse repositório faz parte do meu estudo no curso de <a href="https://nova.escolalinux.com.br/course/servidores-com-tomcat">Servidores com Tomcat</a>, 
+<p align="justify">Esse repositório faz parte do meu estudo no curso de <a href="https://nova.escolalinux.com.br/course/servidores-com-tomcat" target="_blank">Servidores com Tomcat</a>, 
 que está disponível na Escola Linux.</p>
 
 <p align="justify">Nesse curso, eu aprendi a criar, configurar, administrar e monitorar servidores Java com Tomcat. Agora, eu sou capaz de criar e administrar servidores web em Java com maestria, graças às habilidades adquiridas no curso. O Tomcat é um dos servidores Java mais utilizados do mundo e é uma ferramenta essencial no mercado de TI.</p>
