@@ -29,7 +29,7 @@ Para clonar um repositório que usa Git LFS, é necessário ter o Git LFS instal
 
 Com o Git LFS instalado, é possível clonar o repositório normalmente, usando o comando `git clone`:
 
-`git clone https://github.com/wbaamaral/apostilacursoadministracaotomcat.git`
+`git clone https://github.com/wbaamaral/ApostilaCursoTomcat.git`
 
 Após o clone, é necessário fazer o download dos objetos LFS usados no repositório. Para isso, basta executar o seguinte comando:
 
