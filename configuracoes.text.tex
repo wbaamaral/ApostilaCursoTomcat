@@ -81,6 +81,15 @@
 \newcolumntype{C}{>{\centering\arraybackslash}p{4cm}}  % Define um novo tipo de coluna "C" com largura fixa de 4cm e alinhamento centralizado.
 \newcolumntype{D}{>{\raggedleft\arraybackslash}p{2cm}} % Define um novo tipo de coluna "D" com largura fixa de 2cm e alinhamento à direita.
 
+\usepackage{accsupp}
+% define a função de cópia
+\newcommand{\CopyAndPaste}{%
+	\def\lst@OutputSpace{\lst@ttfamily\char32\protect\BeginAccSupp{method=hex,unicode,ActualText=20}\lst@ActualOutputSpace\protect\EndAccSupp{}\lst@ttfamily\char32}%
+	\let\lst@OutputTab=\lst@OutputSpace
+	\let\lst@OutputCR=\lst@OutputSpace
+	\let\lst@OutputFF=\lst@OutputSpace
+}
+
 
 \title{\ubuntu Administração Apache Tomcat 9.0} % Define o título do documento.
 \author{\emph{Autor}: Murilo Bavaro Bilia} % Define o autor do documento.

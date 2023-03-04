@@ -1,0 +1,95 @@
+\appendix
+\section{Configurar instância com serviço}\label{apendice:servico}
+
+Em primeiro lugar, ao tornar o Tomcat um serviço, ele será iniciado automaticamente com o sistema operacional, garantindo que sua aplicação Java esteja sempre disponível, mesmo após um reinício do servidor. Isso significa que você não precisará iniciar manualmente o Tomcat toda vez que precisar executar sua aplicação, economizando tempo e esforço.
+
+Além disso, ao utilizar o Tomcat como um serviço, você pode facilmente controlá-lo através de comandos padrão do sistema, como "start", "stop" e "restart". Isso torna o gerenciamento do Tomcat mais fácil e acessível, mesmo para usuários menos experientes.
+
+Outra vantagem importante é a segurança. Ao executar o Tomcat como um serviço, ele é executado com permissões limitadas, o que ajuda a proteger o sistema operacional contra possíveis ataques ou vulnerabilidades de segurança em sua aplicação Java.
+
+Por fim, utilizar o Tomcat como um serviço também facilita a integração com outras ferramentas de gerenciamento e monitoramento, permitindo que você monitore o desempenho da sua aplicação Java e tome medidas proativas para evitar problemas antes que eles ocorram.
+
+Após criar os dois arquivos, é necessário efetuar um reload na lista de serviços do sistema, e por eles para inicio automático, só para lembra esses comandos são de nível administrativo use o root ou sudo para executa-los.
+
+\begin{verbatim}
+# reload serviços
+systemctl daemon-reload
+
+# iniciar serviços
+systemctl start tomcat1
+systemctl start tomcat2
+
+# parar serviços
+systemctl stop tomcat1
+systemctl stop tomcat2
+
+# reiniciar serviços
+systemctl restart tomcat1
+systemctl restart tomcat2
+
+# habilitar início automático
+systemctl enable tomcat1
+systemctl enable tomcat2
+
+# desabilitar início automático
+systemctl disable tomcat1
+systemctl disable tomcat2
+
+\end{verbatim}
+
+\begin{figure}[H]
+	\centering
+	\caption[tomcat1.service]{/etc/systemd/system/tomcat1.service}
+	\includegraphics[width=0.85\linewidth]{img/code-img-tomcat1}
+	\label{fig:tomcat1.service}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\caption[tomcat2.service]{/etc/systemd/system/tomcat2.service}
+	\includegraphics[width=0.85\linewidth]{img/code-img-tomcat2}
+	\label{fig:tomcat2.service}
+\end{figure}
+	
+\begin{lstlisting}[breaklines=true,basicstyle=\scriptsize,	breaklines=true, label=servico01,showspaces=false,showstringspaces=false,caption={Script exemplo para gerar arquivo de serviço}]
+cat >/etc/systemd/system/tomcat1.service <<TERMINOU
+[Unit]
+Description=Apache Tomcat Web Application Container
+After=network.target
+
+
+[Service]
+Type=forking
+
+
+Environment=JAVA_HOME=$(update-java-alternatives -l|awk '{print $3}')
+Environment=CATALINA_PID=/opt/tomcat/temp/tomcat.pid
+Environment=CATALINA_HOME=/opt/tomcat
+Environment=CATALINA_BASE=/opt/tomcat
+Environment='CATALINA_OPTS=−Xms512M −Xmx1024M −server −XX:+UseParallelGC'
+Environment='JAVA_OPTS=−Djava.awt.headless=true −Djava.security.egd=file:/dev/./urandom'
+
+ExecStart=/opt/tomcat/bin/startup.sh
+ExecStop=/opt/tomcat/bin/shutdown.sh
+
+
+
+User=tomcat
+Group=tomcat
+UMask=0007
+RestartSec=10
+Restart=always
+
+
+[Install]
+WantedBy=multi−user.target
+
+
+
+#
+TERMINOU
+\end{lstlisting}
+
+\section{Personalizar identificação das vms}
+
+Seu texto de anexo aqui...
