@@ -1,0 +1,5 @@
+#!/bin/sh
+linuxlogo -L 19
+figlet -f slant  -w 75 -c "VM - 01"
+figlet -f slant  -w 75 -c "TOMCAT 9"
+

@@ -125,14 +125,14 @@ As configurações de segurança mínimas recomendadas para o uso seguro do mana
 
 \begin{enumerate}
 	\item Definir uma senha forte para o usuário padrão admin.
-	\item 	Limitar o acesso ao manager-gui a um endereço IP específico ou a uma rede específica.
-	\item 	Desativar o acesso anônimo e limitar o número de tentativas de login.
-	\item 	Habilitar o SSL/TLS para criptografar a comunicação entre o navegador e o servidor.
-	\item 	Restringir as permissões de acesso do usuário do manager-gui apenas para as ações necessárias.
-	\item 	Manter o manager-gui atualizado com as últimas atualizações de segurança.
+	\item Limitar o acesso ao manager-gui a um endereço IP específico ou a uma rede específica.
+	\item Desativar o acesso anônimo e limitar o número de tentativas de login.
+	\item Habilitar o SSL/TLS para criptografar a comunicação entre o navegador e o servidor.
+	\item Restringir as permissões de acesso do usuário do manager-gui apenas para as ações necessárias.
+	\item Manter o manager-gui atualizado com as últimas atualizações de segurança.
 \end{enumerate}
 
-E em seguida, reinicie o tomcat:
+E em seguida, reinicie o tomcat\footnote{veja também como colocar a instância rodando como serviço em \nameref{apendice:servico}}:
 
 \begin{lstlisting}[breaklines=true,basicstyle=\ttfamily, 
 label=restartTomcat,
@@ -155,8 +155,8 @@ Após reiniciar, tente acessar a aba “\textbf{Server Status}” na home do Tom
 	\label{fig:tomcat-erro-acesso}
 \end{figure}
 
-Isso ocorre, pois o Tomcat 9 só permite o acesso ao painel de gerenciamento à partir de um browser executado na mesma máquina local que o servidor. Para liberar o acesso a administração remotamente, vamos editar o arquivo /srv/tomcat1/webapps/manager/META-INF/\nameref{contextxml} e comentar a linha conforme o arquivo mostrado no arquivo \ref{contextxml} página \pageref{contextxml}. Para esse treinamento como é um ambiente controlado e fora da internet, vamos comentar essa configuração, porém, quando for colocar em produção e altamente recomendado manter isso ativo e caso precise de acesso externo ao painel, faça uma regra similar liberando sua origem para ter acesso.
-
+Isso ocorre, pois o Tomcat 9 só permite o acesso ao painel de gerenciamento à partir de um browser executado na mesma máquina local que o servidor. Para liberar o acesso a administração remotamente, vamos editar o arquivo /srv/tomcat1/webapps/manager/META-INF/\nameref{contextxml} e comentar a linha conforme o arquivo mostrado no arquivo \ref{contextxml} página \pageref{contextxml}, ainda tem um pequeno script nos anexos que podem ajudar \nameref{commentXml}. Para esse treinamento como é um ambiente controlado e fora da internet, vamos comentar essa configuração, porém, quando for colocar em produção e altamente recomendado manter isso ativo e caso precise de acesso externo ao painel, faça uma regra similar liberando sua origem para ter acesso.
+ 
 \lstinputlisting[language=xml, caption=\firacoderetina{context.xml}, basicstyle=\footnotesize\firacoderetina,  
 label=contextxml, showspaces=false, showtabs=false, showstringspaces='']{xml/context.xml}
 
@@ -240,6 +240,7 @@ Role a janela até a sessão “War file to deploy” e escolha o arquivo war pa
 \newpage
 Em seguida, testem o acesso a aplicação através do browser:
 \begin{figure}[H]
+	\hypertarget{figura-smaple.war}{}
 	\centering
 	\caption[sample.war]{Visão da aplicação online}
 	\includegraphics[width=\linewidth]{img/tela007}
@@ -249,7 +250,7 @@ Em seguida, testem o acesso a aplicação através do browser:
 
 Se você é do tipo que prefere lidar com as coisas via terminal, temos uma opção para você. É possível fazer o deploy do seu aplicativo usando SSH para acessar o servidor. Vamos supor que o seu arquivo esteja no seu terminal e que você já tenha configurado o SSH. O seu endereço IP é 192.168.5.235 e o seu usuário é "master". Além disso, o arquivo "sample.war" está em uma pasta "desenvolvimento" dentro do seu home. Para realizar o deploy via terminal, basta abrir o terminal no seu computador e digitar os seguintes comandos:
 
-\hypertarget{figura-smaple.war}{}
+
 \begin{lstlisting}[breaklines=true,basicstyle=\ttfamily, 
 label=acessosshVm0100 ,
 breaklines=true,caption=\firacoderetina Acessar o servidor via ssh e efetuar o deploy via terminal,

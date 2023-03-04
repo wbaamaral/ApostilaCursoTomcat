@@ -1,5 +1,5 @@
 \appendix
-\section{Configurar instância com serviço}\label{apendice:servico}
+\section{Configurar instância como serviço}\label{apendice:servico}
 
 Em primeiro lugar, ao tornar o Tomcat um serviço, ele será iniciado automaticamente com o sistema operacional, garantindo que sua aplicação Java esteja sempre disponível, mesmo após um reinício do servidor. Isso significa que você não precisará iniciar manualmente o Tomcat toda vez que precisar executar sua aplicação, economizando tempo e esforço.
 
@@ -90,6 +90,43 @@ WantedBy=multi−user.target
 TERMINOU
 \end{lstlisting}
 
+\begin{figure}[H]
+	\centering
+	\caption[tomcat1 e tomcat2]{Serviços tomcat rodando}
+	\includegraphics[width=\linewidth]{img/tela011}
+	\label{fig:tomcat1e2.service}
+\end{figure}
+
+\newpage
 \section{Personalizar identificação das vms}
 
-Seu texto de anexo aqui...
+Para tornar mais fácil a identificação das vms durante os estudos, vamos fazer algumas personalizações para identificar de forma visual cada instância. Para isso vamos utilizar os dois pacotes extras que foram instalados no início das configurações: \emph{figlet} e \emph{linuxlogo}.
+
+\begin{figure}[H]
+	\centering
+	\caption[tela inicial vm01]{Tela inicial vm01}
+	\includegraphics[width=0.8\linewidth]{img/vm01}
+	\label{fig:vm01}
+\end{figure}
+
+Para ter esse efeito mostrado \nameref{fig:vm01}, vamos precisar alterar três arquivos:
+	\emph{/etc/update-motd.d/10-uname}, \emph{/etc/motd} e /root/.bashrc.
+
+Essa alteração é para deixar o prompt com o formato mostrado na imagem, e algums atalhos também foram configurados.
+\lstinputlisting[language=bash, caption=\firacoderetina{.bashrc}, basicstyle=\scriptsize \firacoderetina,  
+label=bashrc, showspaces=false, showtabs=false, showstringspaces='']{arquivos/bashrc.txt}
+
+Personalize para cada vm com seu nome.
+\lstinputlisting[language=bash, caption=\firacoderetina{10-uname}, basicstyle=\scriptsize \firacoderetina,  
+label=10-uname, showspaces=false, showtabs=false, showstringspaces='']{arquivos/10-uname}
+
+E por fim vamos zerar o conteúdo do arquivo /etc/motd, fazendo um echo para ele: \emph{\textbf{echo > /etc/motd}}.
+
+\section{Script para comentários}
+
+Para fazer os comentários de uma única vez pode usar esse comando:
+
+\begin{lstlisting}[label=commentXml,language=bash,breaklines=true,basicstyle=\ttfamily,caption={Incluir comentários em arquivos context.xml}]
+	cd /srv/tomcat2/ 
+	find webapps/ -type f -name context.xml | xargs sed -i 's#<Valve#<!--<Valve#g;s#|0:0:0:0:0:0:0:1" />#"|0:0:0:0:0:0:0:1" />-->#g' 
+\end{lstlisting}
