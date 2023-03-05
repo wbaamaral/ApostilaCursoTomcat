@@ -165,13 +165,13 @@ Abram o arquivo \texttt{\$CATALINA\_HOME/conf/tomcat-users.xml} e percebam que a
 
 \begin{figure}[H]
 	\centering
-	\caption[server.xml]{Server xml nativo}
+	\caption[server.xml]{Arquivo original server.xml sem alterações}
 	\includegraphics[width=\linewidth]{img/tela006}
 	\label{fig:tomcat-realm-nativo}
 \end{figure}
 
 
-\begin{lstlisting}[language=xml, caption=\firacoderetina{server.xml}, basicstyle=\scriptsize\firacoderetina, 
+\begin{lstlisting}[language=xml, caption=\firacoderetina{server.xml} com as modificações para usar hash na senha, basicstyle=\scriptsize\firacoderetina, 
 label=realm512, showspaces=false, showtabs=false, showstringspaces='', firstnumber=139]	
 
 <Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase">

@@ -1,7 +1,17 @@
 \section{Cluster}
 
-Nesse capítulo, iremos montar um cluster para garantir a alta disponibilidade das aplicações que estão em execução no Tomcat. Além da configuração de alta disponibilidade nos servidores do Tomcat, as aplicações também tem que estar preparadas para replicar as sessões geradas quando uma falha ocorrer; essas aplicações tem que possuir a tag <distributable/> dentro do arquivo de especificação web.xml.
+Nesse capítulo, iremos montar um cluster para garantir a alta disponibilidade das aplicações que estão em execução no Tomcat. Além da configuração de alta disponibilidade nos servidores do Tomcat, as aplicações também tem que estar preparadas para replicar as sessões geradas quando uma falha ocorrer; essas aplicações tem que possuir a tag \emph{<distributable/>} dentro do arquivo de especificação web.xml como mostrado na \textbf{figura \ref{fig:tomcat-wbexml-distributable}}.
 
+\begin{figure}[H]
+	\centering
+	\caption[Tag distribuitble]{Tag de informação de uso de instância distribuída}
+	\includegraphics[width=\linewidth]{img/tela012}
+	\label{fig:tomcat-wbexml-distributable}
+\end{figure}
+
+Observe que a tag "distributable" foi adicionada ao arquivo "web.xml". Essa tag é necessária para que o Tomcat saiba que essa aplicação deve ser distribuída em um ambiente de cluster.
+
+\newpage
 \subsection{Cluster no mesmo servidor}
 
 É possível executar diversas instâncias de Tomcat no mesmo servidor e montar um cluster com apenas uma máquina. Apesar de não ter uma redundância física em caso de falha no sistema operacional hospedeiro, essa estrutura pode ser útil quando se trabalha com recursos limitados.
@@ -47,12 +57,51 @@ vm01:/srv/tomcat2#
 
 \end{lstlisting}
 
-Em seguida, altere os parâmetros de portas dentro do arquivo de server.xml, adicionando 100 a esses valores:
+Em seguida, alterar os parâmetros de portas dentro do arquivo de \nameref{serverxml}, adicionando 100 a esses valores, por exemplo: porta 8080 vai para 8180. Vamos deixar o arquivo de configuração conforme o mostrado na figrura \ref{fig:tomcat-i2-serverxml}, de modo que seja possível subir uma segunda instância dentro do mesmo servidor. Nos anexos, na página \pageref{apendice:servico}, tem uma demonstração de como colocar a instância como um serviço do sistema operacional.
 
-\lstinputlisting[language=xml, caption=\firacoderetina{server.xml}, basicstyle=\scriptsize \firacoderetina,  
-label=serverxml, showspaces=false, showtabs=false, showstringspaces='']{xml/server.xml}
+\begin{figure}[p]
+	\centering
+	\caption[server.xml]{Configuraçao exemplo server.xml}
+	\includegraphics[width=0.9\linewidth]{img/tela013}
+	\label{fig:tomcat-i2-serverxml}
+\end{figure}
 
+\begin{figure}[p]
+	\centering
+	\caption[context.xml]{Tag para ser colocada no context.xml das dusas instâncias}
+	\includegraphics[width=0.9\linewidth]{img/tela014}
+	\label{fig:tomcat-ii-contextxml}
+\end{figure}
 
-\lstinputlisting[language=xml, caption=\firacoderetina{adicionar esse conteúdo no server.xml}, basicstyle=\tiny \firacoderetina,  
+\newpage
+Seguindo com a configuração da nossa segunda instância tomcat. Após isso, configure um usuário de administrador no arquivo tomcat-users.xml, semelhante ao que fizemos na instância do tomcat 1, como mostrado no arquivo \ref{realm512} na página \pageref{realm512}. Outra alteração que precisaremos realizar é aquela do \nameref{contextxml} que é mostrada na página \pageref{contextxml}, para permitir acesso externo a interface gráfica.
+
+Após essas etapas, inicie a segunda\footnote{Caso tenha colocado como serviço use: s\texttt{ystemct start tomcat2}, veja: \texttt{\nameref{apendice:servico}}} instância com o comando /srv/tomcat2/bin/startup.sh.
+
+Em seguida vamos configurar a tag abaixo dentro do arquivo\footnote{Observando o caminho de instalação de cada um, este é o path genério que deve adaptar: \newline\hspace*{.65cm}\texttt{{\footnotesize /srv/<instânciatomcat>/conf/context.xml}}} context.xml, esta configuração deve ser realizada nas duas instâncias, conform mostrado na firgura \ref{fig:tomcat-ii-contextxml}.
+
+E em ambas instâncias, inclua o bloco de configuração abaixo dentro do arquivo server.xml dentro da tag <Engine>
+\lstinputlisting[language=xml, caption=\firacoderetina{Conteúdo para adicionar dentro da tag engine do server.xml das duas instâncias}, basicstyle=\tiny \firacoderetina,  
 label=cluster-xml, showspaces=false, showtabs=false, showstringspaces='']{xml/config-cluster.xml}
 
+\newpage
+E adicione o parâmetro \emph{jvmRoute} com um ID para a instância dentro da tag Engine. O bloco do arquivo ficará da seguinte forma:
+
+\begin{figure}[H]
+	\centering
+	\caption[server.xml]{Roteamento para ser colocada no server.xml das duas instâncias}
+	\includegraphics[width=0.8\linewidth]{img/tela015}
+	\label{fig:tomcat-ii-route}
+\end{figure}
+Feito isso, reinicie as instâncias e faça o deploy do aplicativo de teste replicadorsessao.war nas duas instâncias, acesse o endereço e teste se a palavra colocada na sessão será lida na outra instância:
+\begin{figure}[H]
+	\centering
+	\caption[replicadorsessao.war]{Replicador de sessão}
+	\includegraphics[width=0.8\linewidth]{img/tela016}
+	\label{fig:tomcat-ii-replic}
+\end{figure}
+
+\subsection{Cluster em servidores diferentes}
+
+O procedimento para criar um cluster entre dois servidores físicos diferentes é bem similar, devendo-se apenas se atentar ao endereço de multicast utilizado para replicar as sessões entre os membros do cluster.Ligue a VM2 e repita os passos para configuração básica do Tomcat (Liberação de administração remota, criação de usuário, etc); Em seguida, configure os arquivos server.xml e context.xml com os parâmetros de cluster.
+Em seguida, faça o deploy do aplicativo replicadorsessao.war via Manager:

@@ -130,3 +130,9 @@ Para fazer os comentários de uma única vez pode usar esse comando:
 	cd /srv/tomcat2/ 
 	find webapps/ -type f -name context.xml | xargs sed -i 's#<Valve#<!--<Valve#g;s#|0:0:0:0:0:0:0:1" />#"|0:0:0:0:0:0:0:1" />-->#g' 
 \end{lstlisting}
+
+\section{Configuração extra para cluster}
+
+
+\lstinputlisting[language=xml, caption=\firacoderetina{server.xml}, basicstyle=\scriptsize \firacoderetina,  
+label=serverxml, showspaces=false, showtabs=false, showstringspaces='']{xml/server.xml}
